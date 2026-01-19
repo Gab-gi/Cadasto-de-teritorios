@@ -1,0 +1,31 @@
+#include <stdio.h>
+
+int main() {
+    char nome[5] [50];
+    char cor[5] [50];
+    int tropa [6];
+    int i; // Variável de controle do laço
+
+    // O laço vai repetir de 1 até 5
+    for (i = 1; i <= 5; i++) {
+        printf("\n--- Cadastro do %dº Território ---\n", i);
+
+        printf("Digite o nome: ");
+        scanf(" %[^\n]", nome[i]); // O espaço antes de % limpa o buffer
+
+        printf("Digite a cor: ");
+        scanf(" %s", cor[i]);
+
+        printf("Digite a quantidade de tropas: ");
+        scanf(" %d", &tropa[i]);
+}
+        // Imprime o resumo logo após cadastrar este item
+        printf("\n>> Registrado: %s (%s) com %d tropas.\n", nome, cor, tropa);
+        printf("----------------------------------\n");
+    
+for (i = 1; i <= 5; i++) {
+    printf("\n %s Nome da tropa |%s Cor | %d Tropa \n" ,i + 1, &nome[i], cor[i], tropa[i]);
+
+}
+    return 0;
+}
