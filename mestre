@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include <stdlib.h> 
+#include <time.h>
+
+#define MAX 5
+
+typedef struct {
+    char nome[50];
+    char cor[50];
+    int tropas;
+} Territorio;
+
+int main() {
+    Territorio *mapa = (Territorio *) malloc(MAX * sizeof(Territorio));
+    if (mapa == NULL) return 1;
+
+    int i, atacante, defensor, dado_atq, dado_def, acao;
+    int rodando = 1;
+    srand(time(NULL));
+
+    // 1. CADASTRO
+    for (i = 0; i < MAX; i++) {
+        printf("\n--- Cadastro do %dº Território ---\n", i + 1);
+        printf("Nome: "); scanf(" %[^\n]", mapa[i].nome);
+        printf("Cor: ");  scanf(" %s", mapa[i].cor);
+        printf("Tropas: "); scanf("%d", &mapa[i].tropas);
+    }
+
+    printf("\n****************************************\n");
+    printf("* SUA MISSAO E ATACAR O ADVERSARIO     *\n");
+    printf("****************************************\n");
+
+    // 2. MODO DE GUERRA
+    while (rodando) {
+        printf("\n========= MENU DE COMANDO =========\n");
+        printf("1 - CONHECER ADVERSARIOS\n");
+        printf("2 - ATACAR\n");
+        printf("3 - SAIR\n");
+        printf("Escolha sua acao: ");
+        scanf("%d", &acao);
+
+        switch (acao) {
+            case 1: // CONHECER ADVERSARIO
+                printf("\n--- RELATORIO DE INTELIGENCIA ---\n");
+                for (i = 0; i < MAX; i++) {
+                    printf("[%d] Territorio: %-10s | Cor: %-10s | Tropas: %d\n", 
+                            i, mapa[i].nome, mapa[i].cor, mapa[i].tropas);
+                }
+                break;
+
+            case 2: // ATACAR
+                printf("\nEscolha o ATACANTE (0-4): ");
+                scanf("%d", &atacante);
+                printf("Escolha o DEFENSOR (0-4): ");
+                scanf("%d", &defensor);
+
+                if (atacante < 0 || atacante >= MAX || defensor < 0 || defensor >= MAX || atacante == defensor) {
+                    printf("\n[ERRO] Escolha de territorios invalida!\n");
+                    break;
+                }
+
+                // Logica de Dados
+                dado_atq = (rand() % 6) + 1;
+                dado_def = (rand() % 6) + 1;
+                int f_atq = mapa[atacante].tropas + dado_atq;
+                int f_def = mapa[defensor].tropas + dado_def;
+
+                printf("\nBatalha: %s (%d) vs %s (%d)\n", mapa[atacante].nome, f_atq, mapa[defensor].nome, f_def);
+
+                if (f_atq > f_def) {
+                    printf(">>> VITORIA DO ATACANTE: %s <<<\n", mapa[atacante].nome);
+                    printf("O territorio %s perdeu e sua tropa foi reduzida em 1!\n", mapa[defensor].nome);
+                    mapa[defensor].tropas -= 1; 
+                    if (mapa[defensor].tropas < 0) mapa[defensor].tropas = 0;
+                } else {
+                    printf(">>> VITORIA DO DEFENSOR: %s <<<\n", mapa[defensor].nome);
+                    printf("O territorio %s perdeu e sua tropa foi reduzida em 1!\n", mapa[atacante].nome);
+                    mapa[atacante].tropas -= 1;
+                    if (mapa[atacante].tropas < 0) mapa[atacante].tropas = 0;
+                }
+                break;
+
+            case 3:
+                rodando = 0;
+                printf("Saindo do jogo...\n");
+                break;
+
+            default:
+                printf("Opcao invalida!\n");
+                break;
+        }
+    }
+
+    free(mapa);
+    return 0;
+}
